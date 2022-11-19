@@ -23,3 +23,10 @@ class Article(models.Model):
     class Meta:
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+class Tag(models.Model):
+    title = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
+    articles = models.ManyToManyField(Article)
+
+    def str(self):
+        return '{}'.format(self.title)
