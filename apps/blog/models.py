@@ -36,6 +36,7 @@ class BlogCategory(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(verbose_name='Название', max_length=255)
+
     def __str__(self):
         return self.name
     class Meta:
@@ -58,6 +59,7 @@ class Article(models.Model):
         source='image',
         processors=[ResizeToFill(600, 400)]
     )
+
     updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
     created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     def __str__(self):
