@@ -6,6 +6,8 @@ from django.utils.http import urlencode
 admin.site.register(Tag)
 
 
+
+
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'image_tag_thumbnail', 'article_count']
@@ -23,13 +25,22 @@ class BlogCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'category_link','publish_date', 'created_at','tag_link']
+    list_display = ['id', 'title', 'category_link','publish_date', 'created_at','tag_link','user']
     list_display_links = ['id', 'title','tag_link']
     list_filter = ['category','tags']
+
+
 
     def category_link(self, instance):
         url = reverse('admin:blog_article_change', args=[instance.category_id])
         return format_html(f"<a href='{url}'>{instance.category.name}</a>")
+
+    def user(self, instance):
+        if instance.user:
+            url = reverse('admin:user_user_change', args=[instance.user.id])
+            return format_html(f"<a href='{url}'>{instance.user}</a>")
+
+    user.short_description = 'Автор'
     def tag_link(self,instance):
         comma = ""
         for tags in instance.tags.all():

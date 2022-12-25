@@ -20,6 +20,7 @@ class User(AbstractUser):
         processors=[ResizeToFill(200, 200)]
     )
 
+
     def image_tag_thumbnail(self):
         if self.image:
             if not self.image_thumbnail:
