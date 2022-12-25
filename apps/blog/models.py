@@ -1,4 +1,5 @@
 from django.db import models
+from apps.user.models import User
 from imagekit.models import ProcessedImageField, ImageSpecField
 from pilkit.processors import ResizeToFill
 from django.utils.safestring import mark_safe
@@ -44,6 +45,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 class Article(models.Model):
     category = models.ForeignKey(to=BlogCategory, verbose_name='Категория', on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, verbose_name='Автор', on_delete=models.CASCADE, null=True)
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     text_preview = models.TextField(verbose_name='Текст-превью', null=True, blank=True)
     text = models.TextField(verbose_name='Текст')

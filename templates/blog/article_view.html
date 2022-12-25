@@ -10,8 +10,9 @@
     {% endfor %}
 
 </p>
+
     {% if article.user %}
-        <p><b>автор: </b>{{ article.user.first_name }} {{ article.user.last_name }}</p>
+        <p><b>Автор поста: </b>{{ article.user.first_name }} {{ article.user.last_name }}</p>
         {% if article.user.image %}
             <img class='img-thumbnail' src="{{ article.user.image_thumbnail.url }}" alt="">
         {% endif %}
