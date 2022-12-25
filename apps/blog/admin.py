@@ -41,6 +41,7 @@ class ArticleAdmin(admin.ModelAdmin):
             return format_html(f"<a href='{url}'>{instance.user}</a>")
 
     user.short_description = 'Автор'
+
     def tag_link(self,instance):
         comma = ""
         for tags in instance.tags.all():
