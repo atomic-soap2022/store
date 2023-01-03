@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.safestring import mark_safe
-from imagekit.models import ProcessedImageField
+from imagekit.models import ProcessedImageField, ImageSpecField
 from mptt.models import MPTTModel, TreeForeignKey
 from django.urls import reverse
 from pilkit.processors import ResizeToFill
@@ -53,6 +53,42 @@ class Category(MPTTModel):
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+class ProductImage(models.Model):
+    image = ProcessedImageField(
+        verbose_name='Изображение',
+        upload_to='catalog/product/',
+
+    )
+    image_thumbnail = ImageSpecField(
+        source='image',
+        processors=[ResizeToFill(600, 400)]
+    )
+    product = models.ForeignKey('Product',on_delete=models.CASCADE)
+    is_main = models.BooleanField(verbose_name='Основное изображение', default=False)
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.is_main:
+            ProductImage.objects.filter(product=self.product).update(is_main=False)
+        super().save(force_insert, force_update, using, update_fields)
+    def __str__(self):
+        return ''
+
+    def image_tag_thumbnail(self):
+
+            if not self.image_thumbnail:
+                ProductImage.objects.get(id=self.id)
+            return mark_safe(f"<img src='/{MEDIA_ROOT}{self.image_thumbnail}' width='70'>")
+
+    image_tag_thumbnail.short_description = 'Текущее изображение'
+
+    def image_tag(self):
+            if not self.image_thumbnail:
+                ProductImage.objects.get(id=self.id)
+            return mark_safe(f"<img src='/{MEDIA_ROOT}{self.image_thumbnail}'>")
+
+    image_tag.short_description = 'Текущее изображение'
+    class Meta:
+        verbose_name = 'Изображение товара'
+        verbose_name_plural = 'Изображения товара'
 
 class Product(models.Model):
         name = models.CharField(verbose_name='Название', max_length=255)
@@ -63,9 +99,24 @@ class Product(models.Model):
         categories = models.ManyToManyField(Category,verbose_name="Категории",through='ProductCategory',blank=True  )
         updated_at = models.DateTimeField(verbose_name='Дата изменения')
         created_at = models.DateTimeField(verbose_name='Дата создания')
+        def images(self):
+            return ProductImage.objects.filter(product=self.id)
 
+        def main_image(self):
+            image = ProductImage.objects.filter(product=self.id,is_main=True).first()
+            if not image:
+                image=self.images().first()
+            return image
+
+        def image_tag(self):
+            image = self.main_image()
+            if image:
+                return image.image_tag_thumbnail()
         def __str__(self):
             return self.name
+
+        def get_absolute_url(self):
+            return reverse('product', args=[self.slug])
 
         class Meta:
             verbose_name = 'Продукт'
@@ -81,6 +132,8 @@ class ProductCategory(models.Model):
             ProductCategory.objects.filter(product=self.product).update(is_main=False)
         super().save(force_insert, force_update, using, update_fields)
 
+    def __str__(self):
+        return ''
     class Meta:
         verbose_name = 'Категория товара'
         verbose_name_plural = 'Категории товара'
