@@ -13,6 +13,7 @@ def article_list(request, category_id):
     return render(request, 'blog/article_list.html', {'articles': articles, 'category': category})
 
 
+
 def article_view(request, category_id, article_id):
     category = BlogCategory.objects.get(id=category_id)
     article = Article.objects.get(id=article_id)
