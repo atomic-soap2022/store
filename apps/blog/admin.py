@@ -12,7 +12,7 @@ admin.site.register(Tag)
 class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'image_tag_thumbnail', 'article_count']
     list_display_links = ['id', 'name', 'image_tag_thumbnail']
-    fields = ['name', 'image_tag', 'image']
+    fields = ['name', 'image_tag', 'image', 'meta_title', 'meta_description', 'keyword']
     readonly_fields = ['image_tag']
 
     def article_count(self, instance):
@@ -27,7 +27,9 @@ class BlogCategoryAdmin(admin.ModelAdmin):
 class ArticleAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'category_link','publish_date', 'created_at','tag_link','user']
     list_display_links = ['id', 'title','tag_link']
+    fields = ['name', 'image_tag', 'image', 'meta_title', 'meta_description', 'keyword']
     list_filter = ['category','tags']
+
 
     def user(self, instance):
         if instance.user:
