@@ -4,13 +4,12 @@ from apps.blog.models import BlogCategory, Article, Tag
 
 def blog_category_list(request):
     blog_categories = BlogCategory.objects.all()
-
     breadcrumbs = {'current': 'Блог'}
-
     return render(
         request,
         'blog/category_list.html',
         {"categories": blog_categories, 'breadcrumbs': breadcrumbs})
+
 
 
 def article_list(request, category_id):
@@ -21,7 +20,6 @@ def article_list(request, category_id):
 def article_view(request, category_id, article_id):
     category = BlogCategory.objects.get(id=category_id)
     article = Article.objects.get(id=article_id)
-
     breadcrumbs = {
         reverse('blog_category_list'): 'Блог',
         reverse('blog_article_list', args=[category_id]): category.name,
@@ -36,7 +34,6 @@ def article_view(request, category_id, article_id):
 def tag_search_view(request, tag_id):
     tag = Tag.objects.get(id=tag_id)
     articles = Article.objects.filter(tags=tag)
-
     breadcrumbs = {
         reverse('blog_category_list'): 'Блог',
         'current': tag.name
