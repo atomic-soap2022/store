@@ -31,6 +31,11 @@
         <div class="col-12"><p class="header-text">✦Магазин для всей семьи!✦</p></div>
         <div class="col-12"><p class="header-text">➡Наш график работы - 24/7 ⌛</p></div>
         <div class="col-12"><p class="header-text">➡Наши контакты - 380(098)67-42-519 | 380(069)78-45-249 ☎ </p></div>
+        {% if request.user.is_authenticated %}
+                <p class="text-end">Привет, {{ request.user.username }} (<a href="{% url 'logout' %}">Выйти</a>)</p>
+            {% else %}
+                <p class="text-end"><a href="{% url 'login' %}">Логин</a>&nbsp;<a href="{% url 'register' %}">Регистрация</a></p>
+            {% endif %}
     </div>
     <div class="row main-menu">
         <nav class="navbar navbar-expand-lg bg-light">
