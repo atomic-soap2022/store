@@ -14,7 +14,7 @@ class RegisterForm(forms.ModelForm):
         email = self.cleaned_data['email']
         check = User.objects.filter(email=email)
         if check:
-            raise forms.ValidationError('Уже есть такой пользователь')
+            raise forms.ValidationError('Такая почта уже существует')
         return email
 
     def clean_password_confirm(self):
@@ -26,4 +26,6 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'image', 'first_name', 'last_name', 'email', 'phone', 'password', 'password_confirm']
+
+        fields = ['username', 'image', 'first_name', 'last_name', 'about', 'email', 'phone', 'password',
+                  'password_confirm']
