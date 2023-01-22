@@ -4,6 +4,7 @@ from apps.catalog.models import Product
 from apps.user.models import User
 from apps.main.mixins import MetaTagMixin
 
+
 class Cart(MetaTagMixin):
     product = models.ForeignKey(to=Product, verbose_name='Продукт', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(verbose_name='Количество')
