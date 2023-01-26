@@ -7,6 +7,9 @@ from apps.user.forms import LoginForm,RegisterForm
 
 def user_login(request):
     error = None
+    breadcrumbs = {
+        'current': 'Вход'
+    }
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -16,7 +19,7 @@ def user_login(request):
                 login(request, user)
                 return redirect('index')
         error = 'Неправильные логин или пароль'
-    return render(request, 'user/login.html', {'error': error})
+    return render(request, 'user/login.html', {'error': error,'breadcrumbs': breadcrumbs})
 
 def user_register(request):
     error = None
@@ -28,7 +31,7 @@ def user_register(request):
             user.save()
             return render(request, 'user/welcome.html', {'user': user})
         error = form.errors
-    return render(request, 'user/register.html', {'error': error})
+    return render(request, 'user/register.html', {'error': error,'breadcrumbs':breadcrumbs})
 
 
 def user_logout(request):
