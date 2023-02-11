@@ -98,8 +98,8 @@ class Product(MetaTagMixin):
         quantity = models.IntegerField(verbose_name='Количество товара', null=True, blank=True)
         price = models.DecimalField(verbose_name='Цена', max_digits=12, decimal_places=2, default=0)
         categories = models.ManyToManyField(Category,verbose_name="Категории",through='ProductCategory',blank=True  )
-        updated_at = models.DateTimeField(verbose_name='Дата изменения')
-        created_at = models.DateTimeField(verbose_name='Дата создания')
+        updated_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
+        created_at = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
 
         def images(self):
             return ProductImage.objects.filter(product=self.id)
