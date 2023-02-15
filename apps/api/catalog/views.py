@@ -1,19 +1,24 @@
 from rest_framework import generics,permissions,viewsets
 from apps.catalog.models import Category,Product
-from apps.api.catalog.serializers import CategorySerializer,ProductReadSerializer,ProductWriteSerializer
+from apps.api.catalog.serializers import CategorySerializer,ProductReadSerializer,ProductWriteSerializer,ProductImageSerializer\
+    , ProductImage
+
 
 class ProductListView(generics.ListAPIView):
     serializer_class = ProductReadSerializer
 
 
     def get_queryset(self):
-        queryset = Product.objects.all(is_checked=True)
-        category = self.request.query_params('category')
+        queryset = Product.objects.filter(is_checked=True)
+
+        category = self.request.query_params.get('category')
         if category:
             queryset = queryset.filter(categories=category)
-        name = self.request.query_params(is_checked=True)
+
+        name = self.request.query_params.get('name')
         if name:
-            queryset = queryset.filter(categories=name)
+            queryset = queryset.filter(name__icontains=category)
+
         return queryset
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
@@ -26,6 +31,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductDetailView(generics.RetrieveAPIView):
     serializer_class = ProductReadSerializer
     queryset = Product.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class ProductCreateView(generics.CreateAPIView):
     serializer_class = ProductWriteSerializer
@@ -44,3 +52,12 @@ class ProductDeleteView(generics.DestroyAPIView):
     serializer_class = ProductWriteSerializer
     queryset = Product.objects.all()
     permission_classes = [permissions.IsAdminUser]
+class ProductImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAdminUser]
+    serializer_class = ProductImageSerializer
+    queryset = ProductImage.objects.all()
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'destroy']:
+            return [permission() for permission in [permissions.IsAdminUser]]
+        return [permission() for permission in [permissions.AllowAny]]
