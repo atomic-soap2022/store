@@ -1,6 +1,7 @@
 from django.urls import path
 from apps.api.catalog.views import ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, \
-    ProductDeleteView,CategoryViewSet
+    ProductDeleteView,CategoryViewSet, ProductImageViewSet
+
 from rest_framework.routers import DefaultRouter
 
 
@@ -14,5 +15,5 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register('category', CategoryViewSet, basename='category')
-
+router.register('product/image', ProductImageViewSet, basename='product_image')
 urlpatterns += router.urls
