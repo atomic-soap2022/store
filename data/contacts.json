@@ -1,0 +1,14 @@
+[
+  {
+    "model": "main.page",
+    "pk": 3,
+    "fields": {
+      "name": "Контакты",
+      "slug": "contacts",
+      "text": "Мы где-то существуем",
+      "meta_title": "Контакты магаза",
+      "meta_description": "Контакты магазина",
+      "keyword": "Контакты магаза"
+    }
+  }
+]
