@@ -62,6 +62,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'page' slug='payment-and-shipping' %}">Доставка и оплата</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'page' slug='contacts' %}">Контакты</a>
+                        </li>
                         {% if request.user.is_authenticated %}
                                 <li class="nav-item">
                                     <a class="nav-link"  href="{% url 'cart_view' %}"> Ваша корзина</a>
