@@ -6,7 +6,9 @@
     {% include '_breadcrumbs.html' %}
 {% endblock %}
 {% block content %}
-    <h1>Привет! Ты на главной страниице этого магазина!</h1>
+    {{ page.text | safe }}
+    {% for product_set in product_sets %}
+        {% include 'main/_product_set.html' %}
+    {% endfor %}
 
-    <h3>В этом магазине вы сможете приобрести что угодно,лишь бы вам понравилось!</h3>
 {% endblock %}
