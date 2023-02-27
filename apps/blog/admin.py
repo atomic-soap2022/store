@@ -1,18 +1,17 @@
 from django.contrib import admin
-from apps.blog.models import BlogCategory, Article, Tag
+from apps.blog.models import BlogCategory, Article, Tag, Comments
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.http import urlencode
+
 admin.site.register(Tag)
-
-
 
 
 @admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'image_tag_thumbnail', 'article_count']
     list_display_links = ['id', 'name', 'image_tag_thumbnail']
-    fields = ['name', 'image_tag', 'image', 'meta_title', 'meta_description', 'keyword']
+    fields = ['name', 'image_tag', 'image', 'meta_title', 'meta_description', 'meta_keywords']
     readonly_fields = ['image_tag']
 
     def article_count(self, instance):
@@ -25,33 +24,27 @@ class BlogCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'category_link','publish_date', 'created_at','tag_link','user']
-    list_display_links = ['id', 'title','tag_link']
-    fields = ['name', 'image_tag', 'image', 'meta_title', 'meta_description', 'keyword']
-    list_filter = ['category','tags']
+    list_display = ['id', 'title', 'category_link', 'tag_links', 'user', 'publish_date', 'created_at']
+    list_display_links = ['id', 'title']
+    list_filter = ['category', 'tags']
 
-
-    def user(self, instance):
-        if instance.user:
-            url = reverse('admin:user_user_change', args=[instance.user.id])
-            return format_html(f"<a href='{url}'>{instance.user}</a>")
-
-    user.short_description = 'Автор'
     def category_link(self, instance):
-        url = reverse('admin:blog_article_change', args=[instance.category_id])
+        url = reverse('admin:blog_blogcategory_change', args=[instance.category_id])
         return format_html(f"<a href='{url}'>{instance.category.name}</a>")
 
-
-
-
-
-    def tag_link(self,instance):
-        comma = ""
-        for tags in instance.tags.all():
-            url = reverse('admin:blog_tag_change', args=[tags.id])
-            comma += f"<a href='{url}'>#{tags.name}, </a>"
-        comma = comma[: comma.rfind(",")]
-        return format_html(comma)
-
     category_link.short_description = 'Категория'
-    tag_link.short_description = 'Теги'
+
+    def tag_links(self, instance):
+        tags = instance.tags.all()
+        data = []
+        for tag in tags:
+            url = reverse('admin:blog_tag_change', args=[tag.id])
+            data.append(f"<a href='{url}'>{tag.name}</a>")
+        result = ', '.join(data)
+        return format_html(result)
+
+    tag_links.short_description = 'Теги'
+@admin.register(Comments)
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'article', 'created_at']
+    list_display_links = ['id']
