@@ -18,21 +18,36 @@
         <a href="">#{{ tag.name }}</a>&nbsp;
         <a href="{% url 'tag_search_view' tag_id=tag.id %}">#{{ tag.name }}</a>&nbsp;
     {% endfor %}
+ {% for comment in comments %}
+        <h4>{{ comment.name }}</h4><h5>{{ comment.text }}</h5>
+    {% endfor %}
 
-</p>
 
+    <h3 class="my-header">Добавить коментарий</h3>
 
-
-    {% if article.user %}
-        <p><b>Автор поста: </b>{{ article.user.first_name }} {{ article.user.last_name }}</p>
-        {% if article.user.image %}
-            <img class='img-thumbnail' src="{{ article.user.image_thumbnail.url }}" alt="">
-        {% endif %}
-
-    {% endif %}
-<p style="text-align: right">
-    Дата: <b>{{ article.publish_date }}</b>
-    Категория: <b>{{ category.name }}</b>
-</p>
-
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ form.data.name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ form.data.email }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="text" class="form-label">Текст</label>
+                    <textarea name="text" id="text" class="form-control" rows="3">{{ form.data.text }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Создать коментарий</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
